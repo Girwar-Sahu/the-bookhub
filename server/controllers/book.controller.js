@@ -2,7 +2,7 @@ import Book from "../models/book.model.js";
 export const createBook = async (req, res) => {
   const { title, author, description, imageURL } = req.body;
   try {
-    if (title || author || description) {
+    if (!title || !author || !description) {
       throw new Error("all fields are required");
     }
     const newBook = new Book({
@@ -17,7 +17,6 @@ export const createBook = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 
 export const getBooks = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ export const getBooks = async (req, res) => {
 
 export const getBook = async (req, res) => {
   try {
-    const bookId = req.params.id;
+    const bookId = req.params.bookId;
     const book = await Book.findById(bookId);
     res.status(200).json(book);
   } catch (error) {
