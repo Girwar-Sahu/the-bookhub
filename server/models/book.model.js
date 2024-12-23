@@ -10,6 +10,10 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    publishedDate: {
+      type: Date,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
