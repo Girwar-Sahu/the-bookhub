@@ -1,8 +1,8 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import ThemeContext from "../utils/ThemeContext";
 
 const Footer = () => {
-  const { isDark, setIsDark } = useContext(ThemeContext);
+  const { isDark } = useContext(ThemeContext);
   return (
     <footer className="py-12 w-full bg-gray-300 dark:bg-gray-950">
       <h2 className="text-center text-lg dark:text-gray-500 tracking-wider font-semibold">

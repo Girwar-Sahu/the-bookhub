@@ -1,5 +1,4 @@
 import React from "react";
-import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -9,13 +8,10 @@ const AboutPage = () => {
       <Header />
       <section className="w-full min-h-screen dark:bg-gray-900  py-8">
         <div className="max-w-7xl mx-auto px-4">
-          {/* Heading Section */}
           <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
             About BookHub
           </h1>
-          
 
-          {/* Content Section */}
           <div className="flex flex-col md:flex-row mt-8 p-8 gap-8 border dark:border-gray-700 boder-gray-200 rounded-lg">
             <div className="md:w-1/2 w-full mb-6 md:mb-0">
               <img

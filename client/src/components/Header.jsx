@@ -17,7 +17,6 @@ function Header() {
   return (
     <header className="sticky top-0 dark:bg-gray-800  bg-white bg-opacity-50 backdrop-blur-md z-20 shadow-lg border-b dark:border-gray-700 border-gray-200">
       <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8">
-       
         <div className="w-52">
           <img
             className="w-full"
@@ -26,7 +25,7 @@ function Header() {
           />
         </div>
 
-        {/* Navigation and Theme Toggle */}
+       
         <div className="flex items-center gap-4">
           {/* Navigation Links */}
           <ul className="flex space-x-4 items-center text-lg">
