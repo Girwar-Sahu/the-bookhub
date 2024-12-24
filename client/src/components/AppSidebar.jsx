@@ -53,7 +53,6 @@ const AppSidebar = () => {
                       to={navLink.url}
                     >
                       <navLink.icon className="!w-6 !h-6" />
-                      {/* Icon size increased */}
                       <span className="text-gray-700 dark:text-gray-300">
                         {navLink.title}
                       </span>
