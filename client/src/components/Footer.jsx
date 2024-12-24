@@ -14,6 +14,7 @@ const Footer = () => {
           className="w-full"
           src={isDark ? "/logo2.png" : "/logo1.png"}
           alt="theBookhub"
+          loading="lazy"
         />
       </div>
       <p className="text-center text-sm dark:text-gray-600">

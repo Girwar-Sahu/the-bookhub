@@ -168,6 +168,7 @@ const EditBook = () => {
                 src={formData?.imageURL}
                 alt="upload"
                 className="w-full object-cover"
+                loading="lazy"
               />
             </div>
           )}

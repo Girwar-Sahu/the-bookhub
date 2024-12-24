@@ -29,6 +29,7 @@ const RecommendedBooks = ({ title }) => {
                   className="w-full h-full object-cover"
                   src={book.imageURL}
                   alt={book.title}
+                  loading="lazy"
                 />
               </div>
 

@@ -25,6 +25,7 @@ const Hero = () => {
             className="w-full h-64 md:h-full object-cover"
             src="/hero.jpeg"
             alt="heroimage"
+            loading="lazy"
           />
         </div>
       </div>

@@ -118,6 +118,7 @@ const ListBook = () => {
                         className="w-10 h-14 object-cover bg-gray-500"
                         src={book.imageURL}
                         alt={book.title}
+                        loading="lazy"
                       />
                     </TableCell>
                     <TableCell>{book.title}</TableCell>

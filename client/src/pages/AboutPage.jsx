@@ -18,6 +18,7 @@ const AboutPage = () => {
                 className="w-full h-64 md:h-80 object-cover rounded-xl shadow-lg"
                 src="/about-image.jpeg"
                 alt="About BookHub"
+                loading="lazy"
               />
             </div>
             <div className="md:w-1/2 w-full text-center md:text-left">

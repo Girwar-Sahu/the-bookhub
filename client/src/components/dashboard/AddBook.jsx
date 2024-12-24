@@ -129,6 +129,7 @@ const AddBook = () => {
                 src={formData.imageURL}
                 alt="upload"
                 className="w-full object-cover"
+                loading="lazy"
               />
             </div>
           )}

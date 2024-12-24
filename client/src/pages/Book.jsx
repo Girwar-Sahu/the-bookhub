@@ -44,6 +44,7 @@ const Book = () => {
                   src={currentBook.imageURL}
                   alt={currentBook.title}
                   className="w-full h-full object-contain rounded-lg"
+                  loading="lazy"
                 />
               </div>
 
