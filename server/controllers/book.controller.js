@@ -1,8 +1,10 @@
 import Book from "../models/book.model.js";
+
 export const createBook = async (req, res) => {
-  const { title, author, description, imageURL } = req.body;
+  const { title, author, description, publishedDate, imageURL } = req.body;
+
   try {
-    if (!title || !author || !description) {
+    if (!title || !author || !description || !publishedDate) {
       throw new Error("all fields are required");
     }
     const newBook = new Book({
@@ -10,6 +12,7 @@ export const createBook = async (req, res) => {
       author,
       description,
       imageURL,
+      publishedDate,
     });
     await newBook.save();
     res.status(201).json(newBook);
@@ -21,13 +24,13 @@ export const createBook = async (req, res) => {
 export const getBooks = async (req, res) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
-    const limit = parseInt(req.query.limit) || 9;
+    const limit = parseInt(req.query.limit) || 10;
     const sortDirection = req.query.sort === "asc" ? 1 : -1;
     const books = await Book.find({
-      ...(req.query.searchQuery && {
+      ...(req.query.searchTerm && {
         $or: [
-          { title: { $regex: req.query.searchQuery, $options: "i" } },
-          { author: { $regex: req.query.searchQuery, $options: "i" } },
+          { title: { $regex: req.query.searchTerm, $options: "i" } },
+          { author: { $regex: req.query.searchTerm, $options: "i" } },
         ],
       }),
     })
@@ -36,6 +39,7 @@ export const getBooks = async (req, res) => {
       .limit(limit);
 
     const totalBooks = await Book.countDocuments();
+
     res.status(200).json({ books, totalBooks });
   } catch (error) {
     res.status(404).json({ message: error.message });

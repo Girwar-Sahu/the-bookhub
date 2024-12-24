@@ -21,7 +21,7 @@ const bookSchema = new mongoose.Schema(
     imageURL: {
       type: String,
       default:
-        "https://firebasestorage.googleapis.com/v0/b/mern-blog-d1c6e.appspot.com/o/bookhub%2Fbooklogo2.png?alt=media&token=8804e4b6-6e96-4941-a3ae-5e81d730da11",
+        "https://firebasestorage.googleapis.com/v0/b/mern-blog-d1c6e.appspot.com/o/bookhub%2Fbooklogo.png?alt=media&token=56b703cb-9e76-45b3-857c-d9b976e526a0",
     },
   },
   { timestamps: true }

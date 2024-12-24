@@ -6,6 +6,6 @@ export const connectDB = async () => {
     console.log(`mongodb connected: ${con.connection.host}`);
   } catch (error) {
     console.log(`Error: connecting to mongoDB ${error.message}`);
-    process.emit(1); // status code 1 means: failure,
+    process.emit(1);
   }
 };
