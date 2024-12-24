@@ -6,7 +6,7 @@ const BookContext = createContext();
 
 export const useBookContext = () => useContext(BookContext);
 
-const API_BASE_URL = "http://localhost:5000/api/books";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const BookProvider = ({ children }) => {
   const [books, setBooks] = useState([]);

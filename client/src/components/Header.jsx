@@ -22,10 +22,10 @@ function Header() {
             className="w-full"
             src={isDark ? "/logo2.png" : "/logo1.png"}
             alt="theBookhub"
+            loading="lazy"
           />
         </div>
 
-       
         <div className="flex items-center gap-4">
           {/* Navigation Links */}
           <ul className="flex space-x-4 items-center text-lg">
