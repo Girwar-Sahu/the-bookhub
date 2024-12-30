@@ -5,6 +5,8 @@ BookHub is an engaging web application designed to provide users with a comprehe
 
 ## Snapshot
 ![Screenshot 2024-12-25 014344](https://github.com/user-attachments/assets/15485175-4701-435f-b453-412b55fe359c)
+![Screenshot 2024-12-30 155406](https://github.com/user-attachments/assets/d87bff34-e701-4ac3-86f5-6ec5892bf257)
+
 
 
 ## Features
