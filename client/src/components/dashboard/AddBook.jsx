@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -18,9 +18,15 @@ import { AlertCircle, Loader2 } from "lucide-react";
 const AddBook = () => {
   const { addBook, loading, error } = useBookContext();
   const [image, setImage] = useState(null);
-  const [formData, setFormData] = useState({});
-  const [uploadProgress, setUploadProgress] = useState();
+  const [formData, setFormData] = useState({
+    title: "",
+    author: "",
+    publishedDate: "",
+    description: "",
+  });
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleImageUpload = (e) => {
     e.preventDefault();
@@ -48,35 +54,49 @@ const AddBook = () => {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setFormData({ ...formData, imageURL: downloadURL });
-            setUploadProgress(null);
+            setUploadProgress(0);
             setUploadError(null);
           });
         }
       );
     } catch (error) {
       setUploadError(error.message);
-      setUploadProgress(null);
+      setUploadProgress(0);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addBook(formData);
-    setFormData({});
+    await addBook(formData);
+    setFormData({
+      title: "",
+      author: "",
+      publishedDate: "",
+      description: "",
+    });
+    setImage(null);
+    setUploadProgress(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
-  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4">
-      {/* Heading */}
       <h2 className="text-3xl font-bold dark:text-white text-gray-900 text-center md:text-left mt-6 mb-6">
         Add Book
       </h2>
 
       <div className="w-full md:w-1/2 mx-auto md:mx-0 bg-white border dark:border-gray-700 border-gray-200 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
-          {/* File Input */}
           <div className="mb-6">
             <Label
               className="dark:text-gray-300 text-gray-800 font-medium"
@@ -86,24 +106,28 @@ const AddBook = () => {
             </Label>
             <div className="flex gap-2">
               <Input
-                className="dark:bg-gray-900 dark:text-gray-300 text-gray-800  file:text-gray-800 dark:file:text-gray-300  cursor-pointer"
+                className="dark:bg-gray-900 dark:text-gray-300 text-gray-800 file:text-gray-800 dark:file:text-gray-300 cursor-pointer"
                 type="file"
                 id="image"
                 accept="image/*"
                 placeholder="Upload Book Image"
                 onChange={(e) => setImage(e.target.files[0])}
+                ref={fileInputRef}
               />
               <Button
                 className="dark:text-white bg-green-500 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 py-3 px-6 rounded-lg font-medium transition-all"
                 onClick={handleImageUpload}
-                disabled={uploadProgress}
+                disabled={uploadProgress > 0}
               >
-                Upload image
+                {uploadProgress > 0 ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Upload image"
+                )}
               </Button>
             </div>
           </div>
 
-          {/* image upload error */}
           {uploadError && (
             <Alert className="mb-6 dark:bg-gray-800 dark:border-gray-700 text-red-600 dark:text-red-400">
               <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
@@ -112,8 +136,7 @@ const AddBook = () => {
             </Alert>
           )}
 
-          {/* image upload progress */}
-          {uploadProgress && (
+          {uploadProgress > 0 && (
             <div className="mb-6">
               <Progress
                 value={uploadProgress}
@@ -122,7 +145,6 @@ const AddBook = () => {
             </div>
           )}
 
-          {/* uploaded image preview */}
           {formData.imageURL && (
             <div className="mb-6 w-1/2 mx-auto">
               <img
@@ -134,7 +156,6 @@ const AddBook = () => {
             </div>
           )}
 
-          {/* Title Field */}
           <div className="mb-6">
             <Label
               className="dark:text-gray-300 text-gray-800 font-medium"
@@ -149,14 +170,11 @@ const AddBook = () => {
               name="title"
               required={true}
               placeholder="Enter book title"
-              value={formData?.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              value={formData.title}
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* Author Field */}
           <div className="mb-6">
             <Label
               className="dark:text-gray-300 text-gray-800 font-medium"
@@ -171,14 +189,11 @@ const AddBook = () => {
               name="author"
               required={true}
               placeholder="Enter author name"
-              value={formData?.author}
-              onChange={(e) =>
-                setFormData({ ...formData, author: e.target.value })
-              }
+              value={formData.author}
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* Published Year Field */}
           <div className="mb-6">
             <Label
               className="dark:text-gray-300 text-gray-800 font-medium"
@@ -193,14 +208,11 @@ const AddBook = () => {
               name="publishedDate"
               placeholder="Choose year"
               required={true}
-              value={formData?.publishedDate}
-              onChange={(e) =>
-                setFormData({ ...formData, publishedDate: e.target.value })
-              }
+              value={formData.publishedDate}
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* Description Field */}
           <div className="mb-6">
             <Label
               className="dark:text-gray-300 text-gray-800 font-medium"
@@ -214,14 +226,11 @@ const AddBook = () => {
               name="description"
               required={true}
               placeholder="Enter a brief description about the book"
-              value={formData?.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              value={formData.description}
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* display error */}
           {error && (
             <div className="mb-6">
               <Alert className="mb-6 dark:bg-gray-800 dark:border-gray-700 text-red-600 dark:text-red-400">
@@ -232,7 +241,6 @@ const AddBook = () => {
             </div>
           )}
 
-          {/* Submit Button */}
           <div className="flex justify-end">
             <Button
               className="w-full dark:text-white bg-green-500 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 py-3 px-6 rounded-lg font-medium transition-all"

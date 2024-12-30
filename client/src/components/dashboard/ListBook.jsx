@@ -16,25 +16,24 @@ import { useBookContext } from "@/utils/BookContext";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const ListBook = () => {
-  const { fetchBooks, fetchBooksByIndex, books, loading, error, removeBook } =
-    useBookContext();
-  const [showMore, setShowMore] = useState(false);
+  const {
+    fetchBooks,
+    fetchBooksByIndex,
+    books,
+    loading,
+    error,
+    removeBook,
+    hasMoreBooks,
+  } = useBookContext();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
-
+  
   useEffect(() => {
     fetchBooks();
   }, []);
-
-  useEffect(() => {
-    if (books.length % 10 === 0 && books.length > 0) {
-      setShowMore(true);
-    } else {
-      setShowMore(false);
-    }
-  }, [books]);
 
   const handleShowMore = () => {
     const startIndex = books.length;
@@ -49,12 +48,15 @@ const ListBook = () => {
   const confirmDelete = () => {
     if (selectedBook) {
       removeBook(selectedBook._id);
-      setIsAlertOpen(false);
-      setSelectedBook(null);
     }
+    resetAlertState();
   };
 
   const cancelDelete = () => {
+    resetAlertState();
+  };
+
+  const resetAlertState = () => {
     setIsAlertOpen(false);
     setSelectedBook(null);
   };
@@ -83,18 +85,22 @@ const ListBook = () => {
       <ScrollArea type="auto">
         <div className="w-full mx-auto md:mx-0 bg-white border dark:border-gray-700 border-gray-200 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
           <Table>
-            <TableCaption>
-              <div className="w-1/2 mx-auto">
-                {showMore && (
+            {hasMoreBooks && (
+              <TableCaption>
+                <div className="w-1/2 mx-auto">
                   <Button
                     onClick={handleShowMore}
                     className="dark:text-blue-400 dark:bg-transparent dark:hover:bg-transparent dark:hover:text-blue-600 text-lg bg-transparent text-blue-500 hover:bg-transparent hover:text-blue-400"
                   >
-                    Show more
+                    {loading ? (
+                      <Loader2 size={20} className="animate-spin" />
+                    ) : (
+                      "Show More"
+                    )}
                   </Button>
-                )}
-              </div>
-            </TableCaption>
+                </div>
+              </TableCaption>
+            )}
             <TableHeader>
               <TableRow className="border-b dark:border-gray-700 dark:hover:bg-gray-700">
                 <TableHead>Image</TableHead>
@@ -115,7 +121,7 @@ const ListBook = () => {
                   >
                     <TableCell>
                       <img
-                        className="w-10 h-14 object-cover bg-gray-500"
+                        className="w-10 h-14 object-cover dark:bg-gray-500 bg-gray-200"
                         src={book.imageURL}
                         alt={book.title}
                         loading="lazy"
@@ -147,12 +153,8 @@ const ListBook = () => {
 
       {/* Alert Dialog */}
       {isAlertOpen && (
-        <div
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50`}
-        >
-          <div
-            className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md`}
-          >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
               Confirm Deletion
             </h3>

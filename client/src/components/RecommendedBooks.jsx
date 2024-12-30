@@ -26,7 +26,7 @@ const RecommendedBooks = ({ title }) => {
               {/* Image Section */}
               <div className="w-full h-64 overflow-hidden">
                 <img
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover dark:bg-gray-500 bg-gray-200"
                   src={book.imageURL}
                   alt={book.title}
                   loading="lazy"

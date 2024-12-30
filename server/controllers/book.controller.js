@@ -17,12 +17,15 @@ export const createBook = async (req, res) => {
     await newBook.save();
     res.status(201).json(newBook);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
 
 export const getBooks = async (req, res) => {
   try {
+    const totalBooks = await Book.countDocuments();
+    
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const sortDirection = req.query.sort === "asc" ? 1 : -1;
@@ -37,8 +40,6 @@ export const getBooks = async (req, res) => {
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
-
-    const totalBooks = await Book.countDocuments();
 
     res.status(200).json({ books, totalBooks });
   } catch (error) {

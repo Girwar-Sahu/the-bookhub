@@ -14,9 +14,11 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useBookContext } from "@/utils/BookContext";
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const BooksPage = () => {
-  const { fetchBooks, fetchBooksByIndex, books } = useBookContext();
+  const { fetchBooks, loading, fetchBooksByIndex, hasMoreBooks, books } =
+    useBookContext();
   const [showMore, setShowMore] = useState(true);
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
@@ -26,14 +28,6 @@ const BooksPage = () => {
   useEffect(() => {
     fetchBooks();
   }, []);
-
-  useEffect(() => {
-    if (books.length % 10 === 0 && books.length > 0) {
-      setShowMore(true);
-    } else {
-      setShowMore(false);
-    }
-  }, [books]);
 
   const handleShowMore = () => {
     const startIndex = books.length;
@@ -141,7 +135,7 @@ const BooksPage = () => {
                         {/* Image Section */}
                         <div className="w-full h-64 overflow-hidden">
                           <img
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover dark:bg-gray-500 bg-gray-200"
                             src={book.imageURL}
                             alt={book.title}
                             loading="lazy"
@@ -172,12 +166,16 @@ const BooksPage = () => {
                 )}
               </div>
               <div className="w-1/2 flex justify-center mx-auto">
-                {showMore && (
+                {hasMoreBooks && (
                   <Button
                     onClick={handleShowMore}
                     className="dark:text-blue-400 dark:bg-transparent dark:hover:bg-transparent dark:hover:text-blue-600 text-lg bg-transparent text-blue-500 hover:bg-transparent hover:text-blue-400"
                   >
-                    Show more
+                    {loading ? (
+                      <Loader2 size={20} className="animate-spin" />
+                    ) : (
+                      "Show More"
+                    )}
                   </Button>
                 )}
               </div>

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { set } from "mongoose";
 
 const BookContext = createContext();
 
@@ -11,8 +12,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const BookProvider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [currentBook, setCurrentBook] = useState({});
+  const [totalBooks, setTotalBooks] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [hasMoreBooks, setHasMoreBooks] = useState(false);
 
   const fetchBooks = async (query = {}) => {
     setLoading(true);
@@ -24,6 +27,8 @@ export const BookProvider = ({ children }) => {
       }`;
       const response = await axios.get(endpoint);
       setBooks(response.data.books);
+      setTotalBooks(response.data.totalBooks);
+      setHasMoreBooks(response.data.books.length > 9);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch books");
     } finally {
@@ -38,7 +43,8 @@ export const BookProvider = ({ children }) => {
       const response = await axios.get(
         `${API_BASE_URL}/getbooks?startIndex=${index}`
       );
-      setBooks((pre) => [...pre, ...response.data.books]);
+      setBooks((prev) => [...prev, ...response.data.books]);
+      setHasMoreBooks(response.data.books.length > 9);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch books");
     } finally {
@@ -98,7 +104,7 @@ export const BookProvider = ({ children }) => {
     setError(null);
     try {
       await axios.delete(`${API_BASE_URL}/delete/${id}`);
-      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+      setBooks((prevBooks) => prevBooks.filter((book) => book._id !== id));
       toast.success("Book details deleted Successfully.");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete book");
@@ -112,6 +118,8 @@ export const BookProvider = ({ children }) => {
     currentBook,
     loading,
     error,
+    hasMoreBooks,
+    totalBooks,
     fetchBooks,
     fetchBooksByIndex,
     fetchBookById,

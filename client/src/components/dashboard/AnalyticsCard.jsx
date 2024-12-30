@@ -3,12 +3,12 @@ import { Book, Calendar, Users, BarChart } from "lucide-react";
 import { Card } from "../ui/card";
 import { useBookContext } from "@/utils/BookContext";
 
-
 const AnalyticsCard = () => {
-  const { fetchBooks, books } = useBookContext();
+  const { totalBooks, fetchBooks } = useBookContext();
+
   useEffect(() => {
     fetchBooks();
-  }, [books]);
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto px-4 mt-8">
@@ -24,7 +24,7 @@ const AnalyticsCard = () => {
             <Book className="h-8 w-8 text-white" />
             <div>
               <h3 className="text-lg font-semibold">Total Books</h3>
-              <p className="text-2xl font-bold">{books.length}</p>
+              <p className="text-2xl font-bold">{totalBooks}</p>
             </div>
           </div>
         </Card>

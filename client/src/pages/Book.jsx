@@ -16,7 +16,8 @@ const Book = () => {
 
   const formatDate = (isoDate) => {
     try {
-      return format(new Date(isoDate), "yyyy-MM-dd");
+      if (!isoDate) return "N/A";
+      return format(new Date(isoDate), "MMM dd, yyyy");
     } catch (error) {
       console.error("Invalid date format:", error);
       return "";
@@ -50,16 +51,18 @@ const Book = () => {
 
               {/* Book Details */}
               <div className="md:w-2/3 p-6">
-                <h2 className="text-3xl text-center md:text-left font-bold dark:text-white text-gray-900">
+                <h2 className="text-3xl text-center md:text-left font-bold dark:text-white text-gray-90 capitalize">
                   {currentBook.title}
                 </h2>
                 <p className="text-lg text-center md:text-left text-gray-600 dark:text-gray-300 mt-2">
-                  {currentBook.author}
+                  <b>Author :</b> {currentBook.author}
                 </p>
                 <p className="text-sm text-center md:text-left text-gray-500 dark:text-gray-400 mt-1">
+                  <b>Published : </b>
                   {formattedDate}
                 </p>
                 <p className="text-lg text-center md:text-left text-gray-800 dark:text-gray-200 mt-4">
+                  <b>Description : </b>
                   {currentBook.description}
                 </p>
               </div>

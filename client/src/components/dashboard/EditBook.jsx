@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -21,7 +21,7 @@ const EditBook = () => {
   const { updateBook, currentBook, fetchBookById, loading, error } =
     useBookContext();
   const [image, setImage] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState();
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState(null);
   const [id, setId] = useState("");
   const location = useLocation();
@@ -32,6 +32,7 @@ const EditBook = () => {
     description: "",
     imageURL: "",
   });
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -89,21 +90,39 @@ const EditBook = () => {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setFormData({ ...formData, imageURL: downloadURL });
-            setUploadProgress(null);
+            setUploadProgress(0);
             setUploadError(null);
           });
         }
       );
     } catch (error) {
       setUploadError(error.message);
-      setUploadProgress(null);
+      setUploadProgress(0);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     updateBook(id, formData);
-    setFormData({});
+    setFormData({
+      title: "",
+      author: "",
+      publishedDate: "",
+      description: "",
+    });
+    setImage(null);
+    setUploadProgress(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -131,13 +150,18 @@ const EditBook = () => {
                 accept="image/*"
                 placeholder="Upload Book Image"
                 onChange={(e) => setImage(e.target.files[0])}
+                ref={fileInputRef}
               />
               <Button
                 className="dark:text-white bg-green-500 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 py-3 px-6 rounded-lg font-medium transition-all"
                 onClick={handleImageUpload}
                 disabled={uploadProgress}
               >
-                Upload image
+                {uploadProgress > 0 ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Upload image"
+                )}
               </Button>
             </div>
           </div>
@@ -152,7 +176,7 @@ const EditBook = () => {
           )}
 
           {/* image upload progress */}
-          {uploadProgress && (
+          {uploadProgress > 0 && (
             <div className="mb-6">
               <Progress
                 value={uploadProgress}
@@ -189,9 +213,7 @@ const EditBook = () => {
               required={true}
               placeholder="Enter book title"
               value={formData?.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              onChange={handleInputChange}
             />
           </div>
 
@@ -211,9 +233,7 @@ const EditBook = () => {
               required={true}
               placeholder="Enter author name"
               value={formData?.author}
-              onChange={(e) =>
-                setFormData({ ...formData, author: e.target.value })
-              }
+              onChange={handleInputChange}
             />
           </div>
 
@@ -237,9 +257,7 @@ const EditBook = () => {
                   ? formatDate(formData.publishedDate)
                   : ""
               }
-              onChange={(e) =>
-                setFormData({ ...formData, publishedDate: e.target.value })
-              }
+              onChange={handleInputChange}
             />
           </div>
 
@@ -258,9 +276,7 @@ const EditBook = () => {
               required={true}
               placeholder="Enter a brief description about the book"
               value={formData?.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              onChange={handleInputChange}
             />
           </div>
 
